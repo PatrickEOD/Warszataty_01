@@ -4,7 +4,9 @@ import java.util.Random;
 import java.util.Scanner;
 
 /*
- * Napisz prostą grę w zgadywanie liczb. Komputer musi wylosować liczbę w zakresie od 1 do 100. Następnie:
+ * Warsztat: Gra w zgadywanie liczb.
+
+Napisz prostą grę w zgadywanie liczb. Komputer musi wylosować liczbę w zakresie od 1 do 100. Następnie:
 
     Zadać pytanie: "Zgadnij liczbę" i pobrać liczbę z klawiatury.
     Sprawdzić, czy wprowadzony napis, to rzeczywiście liczba i w razie błędu wyświetlić komunikat "To nie jest liczba", po czym wrócić do pkt. 1
@@ -24,33 +26,43 @@ Zgadnij liczbę: 63
 Zgadłeś!
 
  */
-public class Main {
+public class HW1 {
 
 	public static void main(String[] args) {
+		drawNumber();
+	}
+	
+	static void drawNumber() {
+		int targetNumber = new Random().nextInt(100 - 1) + 1;
+		System.out.println("Komputer wylosował liczbę " + targetNumber);
 		Scanner scan = new Scanner(System.in);
-		int number = new Random().nextInt(100) + 1;
-		System.out.println("Zgadnij liczbę");
-		int num = 0;
-		while (num != number) {
-			num = getNumber(scan);
-			if (num < number) {
-				System.out.println("Za mało!");
-			} else if (num > number) {
-				System.out.println("Za dużo!");
+		System.out.println("Zgadnij liczbę: ");
+		int pickNumber =  0;
+		while(pickNumber != targetNumber) {
+			pickNumber = chkInt(scan);
+			if(pickNumber > targetNumber) {
+				System.out.println("Za dużo");
+			} else if (pickNumber < targetNumber) {
+				System.out.println("Za mało");
 			} else {
-				System.out.println("Zgadłeś");
+				System.out.println("Zgadłeś!");
+				break;
 			}
 		}
 		scan.close();
 	}
-
-	static int getNumber(Scanner scan) {
-		
-		while (!scan.hasNextInt()) {
-			scan.nextLine(); // samo next zdejmie tylke znaki do spacji
-			System.out.println("To nie jest liczba");
+	
+	static int chkInt(Scanner scan) {
+		int result = 0;
+		while(!scan.hasNextInt()) {
+			scan.next();
+			System.out.println("To nie liczba!");
 		}
-		int num = scan.nextInt();
-		return num;
+		result = scan.nextInt();
+		while(result <= 0) {
+			System.out.println("Wybierz liczbę z zakresu 1 do 100");
+			result = scan.nextInt();
+		}
+		return result;
 	}
 }

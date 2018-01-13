@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -43,7 +45,8 @@ public class HW5 {
 
 	public static void main(String[] args) {
 		String storedWebsites = storeWebSites();
-		storePopularWords(storedWebsites);
+		String popularWords = storePopularWords(storedWebsites);
+		mostPopularWords(popularWords);
 	}
 
 	static String storeWebSites() {
@@ -77,7 +80,8 @@ public class HW5 {
 	static String storePopularWords(String websitesFile) {
 		String popularFile = "popular_words.txt";
 		File file = new File(websitesFile);
-		try (FileWriter popular = new FileWriter(popularFile, true); Scanner scan = new Scanner(file)) {
+		try (FileWriter popular = new FileWriter(popularFile, true); 
+				Scanner scan = new Scanner(file)) {
 
 			ArrayList<String> storedWebsites = new ArrayList<>();
 			while (scan.hasNextLine()) {
@@ -102,7 +106,7 @@ public class HW5 {
 				while (sentToken.hasMoreTokens()) {
 					String token = sentToken.nextToken().toLowerCase();
 					if (token.length() <= 3) {
-
+						// można wstawic tablicę elementów porzuconych
 					} else {
 						popular.append(token);
 						popular.append("\n");
@@ -125,5 +129,39 @@ public class HW5 {
 			e.printStackTrace();
 		}
 		return popularFile;
+	}
+
+	static void mostPopularWords(String popularFile) {
+		File file = new File(popularFile);
+		try (FileWriter mostPopular = new FileWriter("most_popular_words.txt", true);
+				Scanner popScan = new Scanner(file)) {
+			ArrayList <Integer> recap = new ArrayList<>(); //zawiera ilość powtórzeń dla tablicy word
+			ArrayList <String> word = new ArrayList<>(); //zawiera popularne słowa
+			int index = 0;
+			recap.set(index, 1);
+			word.set(index, popScan.next());
+			index++;
+//			int count = 1;
+			while(popScan.hasNext()) {
+				String temp = popScan.next();
+				if(word.contains(temp)) {
+					int position = word.indexOf(temp);
+					int counter = recap.get(position);
+					recap.set(position, counter += 1);
+				} else {
+					word.set(index, temp);
+					recap.set(index, 1);
+					index++;
+				}
+			}
+			Collections.sort(recap);
+			for(int i = 0; i < 10; i++) {
+				int place = recap.get(i);
+						
+			}
+		} catch (IOException e) {
+			System.out.println("Bład zapisywania do pliku");
+			e.printStackTrace();
+		}
 	}
 }
